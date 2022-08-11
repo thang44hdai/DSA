@@ -1,70 +1,62 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
-int d[1005];
-int go[1005] = {};
-int n, m, k;
-int s, t;
-int Min_cnt = 1e9, D = 1e9;
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-vector<pair<int, int>> vt[1005];
-
+int v, e;
+vector<pair<int, int>> vt[105];
+int d[105] = {};
 void Dijkstra(int u)
 {
+    priority_queue<pair<int, int>> pq;
     d[u] = 0;
     pq.push({d[u], u});
     while (!pq.empty())
     {
         pair<int, int> top = pq.top();
         pq.pop();
-        if (d[top.second] < top.first)
+        if (top.first > d[top.second])
             continue;
         for (auto i : vt[top.second])
         {
-
-            if (d[i.first] > d[top.second] + i.second)
+            if (d[i.second] > d[top.second] + i.first)
             {
-                d[i.first] = d[top.second] + i.second;
-                pq.push({d[i.first], i.first});
-            }
-            go[i.first] = top.second;
-            if (i.first == t)
-            {
-                int x = s, y = t;
-                int cnt = 0;
-                while (y != x)
-                {
-                    cnt++;
-                    y = go[y];
-                }
-                if (cnt <= k)
-                    D = min(D, d[t]);
-                continue;
+                d[i.second] = d[top.second] + i.first;
+                pq.push({d[i.second], i.second});
             }
         }
     }
-    if (D == 1e9)
-        cout << -1;
-    else
-        cout << D;
+    for (int i = 1; i <= v; i++)
+    {
+        if (d[i] != 1e9)
+            cout << d[i] << " ";
+        else
+            cout << -1 << " ";
+    }
+    cout << "\n";
 }
 int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
-
-    cin >> n >> m >> k;
-    cin >> s >> t;
-    while (m--)
+    int t;
+    cin >> t;
+    while (t--)
     {
-        int x, y, z;
-        cin >> x >> y >> z;
-        vt[x].push_back({y, z});
+        fill(d, d + 105, 1e9);
+        cin >> v >> e;
+        while (e--)
+        {
+            int x, y, z;
+            cin >> x >> y >> z;
+            vt[x].push_back({z, y});
+            vt[y].push_back({z, x});
+        }
+        int u;
+        cin >> u;
+        Dijkstra(u);
+        for(int i = 1; i <= v; ++i)
+            vt[i].clear();
     }
-    fill(d, d + 1005, 1e9);
-    Dijkstra(s);
 
     return 0;
 }
