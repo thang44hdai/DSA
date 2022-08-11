@@ -49,7 +49,6 @@ int main()
             int x, y, z;
             cin >> x >> y >> z;
             vt[x].push_back({z, y});
-            vt[y].push_back({z, x});
         }
         int u;
         cin >> u;
